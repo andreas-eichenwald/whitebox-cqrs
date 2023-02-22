@@ -6,4 +6,14 @@ dependencies {
 
     implementation 'ch.qos.logback:logback-core'
     implementation 'org.slf4j:slf4j-api'
+
+    testImplementation platform("org.spockframework:spock-bom:$spockVersion")
+    testImplementation "org.spockframework:spock-core"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }

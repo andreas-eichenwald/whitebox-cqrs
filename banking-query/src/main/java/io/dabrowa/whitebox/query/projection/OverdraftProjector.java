@@ -13,6 +13,6 @@ public class OverdraftProjector {
 
     @EventSourcingHandler
     public void on(final AccountCreatedEvent event) {
-        repository.saveOverdraftLimit(event.accountId(), event.overdraftLimit());
+        repository.saveOverdraftLimit(event.accountNumber(), event.overdraftLimit());
     }
 }

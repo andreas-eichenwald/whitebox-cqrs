@@ -59,7 +59,7 @@ public class AccountAggregate {
     @EventSourcingHandler
     public void handle(final AccountCreatedEvent event) {
         LOGGER.debug("Handling event: {}", event);
-        this.number = event.accountId();
+        this.number = event.accountNumber();
         this.overdraftLimit = event.overdraftLimit();
         this.balance = event.initialBalance();
     }
