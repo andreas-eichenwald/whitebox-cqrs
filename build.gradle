@@ -1,9 +1,37 @@
+plugins {
+    id 'org.springframework.boot' version '3.0.2' apply false
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
 version = "0.0.1"
 description = "Recruitment task for Whitebox"
 
+allprojects {
+    apply plugin: 'io.spring.dependency-management'
+}
+
+// common setup for all submodules
 subprojects {
+    ext {
+        axonVersion = '4.7.0'
+        spockVersion = '2.4-M1-groovy-4.0'
+        gradleDockerComposeVersion = '0.16.11'
+        awaitilityVersion = '4.2.0'
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
     apply plugin: 'java'
     apply plugin: "groovy"
+
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(17)

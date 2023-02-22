@@ -14,6 +14,6 @@
 - [ ] Proper money format (`BigDecimal` instead of `long`)
 
 # Project setup improvements
-- [ ] Version management in gradle build files
+- [x] Version management in gradle build files
 - [ ] Expose non-standard ports configuration in test setup in Gradle and Spring configs to prevent conflicts with standard local setup
 - [ ] Create fast test configuration to run only unit tests without docker-compose, Axon server and Spring context
