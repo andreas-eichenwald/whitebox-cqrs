@@ -34,17 +34,4 @@ public class TransactionProjector {
                 new Transaction(event.creditedAtEpochMillis(), DEBIT, event.debitValue())
         );
     }
-
-    static long epochMillisAtWarsawOffset(String dateTime) {
-        return LocalDateTime.parse(dateTime).toInstant(ZoneOffset.of("+01:00")).toEpochMilli();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(epochMillisAtWarsawOffset("2023-01-10T11:00:00"));
-        System.out.println(epochMillisAtWarsawOffset("2023-01-11T15:00:00"));
-        System.out.println(epochMillisAtWarsawOffset("2023-01-20T22:00:00"));
-        System.out.println(epochMillisAtWarsawOffset("2023-02-10T11:00:00"));
-        System.out.println(epochMillisAtWarsawOffset("2023-02-11T15:00:00"));
-        System.out.println(epochMillisAtWarsawOffset("2023-02-20T22:00:00"));
-    }
 }
