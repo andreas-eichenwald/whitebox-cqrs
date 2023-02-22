@@ -1,9 +1,9 @@
-package io.dabrowa.whitebox;
+package io.dabrowa.whitebox.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "io.dabrowa.whitebox.app")
 public class Main {
     public static String test() {
         return "test";

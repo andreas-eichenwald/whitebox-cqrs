@@ -4,5 +4,9 @@ description = "Recruitment task for Whitebox"
 subprojects {
     apply plugin: 'java'
     apply plugin: "groovy"
-    sourceCompatibility = 1.17
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
 }
