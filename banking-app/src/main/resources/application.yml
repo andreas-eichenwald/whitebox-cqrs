@@ -3,3 +3,5 @@ axon:
     general: jackson
     events: jackson
     messages: jackson
+logging.level:
+  io.dabrowa: DEBUG

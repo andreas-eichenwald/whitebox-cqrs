@@ -1,11 +1,15 @@
-package io.dabrowa.whitebox.query;
+package io.dabrowa.whitebox.query.handling;
 
 import io.dabrowa.whitebox.api.queries.AccountBalanceQuery;
+import io.dabrowa.whitebox.api.queries.AccountBalanceQuery.BalanceQueryResponse;
+import io.dabrowa.whitebox.api.queries.AccountsInTheRedQuery;
 import io.dabrowa.whitebox.api.queries.DebitTestQuery;
 import io.dabrowa.whitebox.api.queries.DebitTestQuery.DebitTestResult;
 import io.dabrowa.whitebox.query.repository.BalanceRepository;
 import io.dabrowa.whitebox.query.repository.OverdraftLimitRepository;
 import org.axonframework.queryhandling.QueryHandler;
+
+import java.util.List;
 
 import static io.dabrowa.whitebox.api.queries.DebitTestQuery.DebitTestResult.OPERATION_ALLOWED;
 import static io.dabrowa.whitebox.api.queries.DebitTestQuery.DebitTestResult.OPERATION_FORBIDDEN;
@@ -27,8 +31,9 @@ public class BalanceQueryHandler {
     }
 
     @QueryHandler
-    public long handle(final AccountBalanceQuery query) throws AccountDoesNotExist {
+    public BalanceQueryResponse handle(final AccountBalanceQuery query) throws AccountDoesNotExist {
         return balanceRepository.getBalance(query.accountId())
+                .map(BalanceQueryResponse::new)
                 .orElseThrow(() -> new AccountDoesNotExist(query.accountId()));
     }
 
@@ -45,6 +50,11 @@ public class BalanceQueryHandler {
             return OPERATION_FORBIDDEN;
         }
         return OPERATION_ALLOWED;
+    }
+
+    @QueryHandler
+    public List<String> handle(final AccountsInTheRedQuery query) {
+
     }
 
     private boolean transactionExceedsOverdraftLimit(final long accountBalance,

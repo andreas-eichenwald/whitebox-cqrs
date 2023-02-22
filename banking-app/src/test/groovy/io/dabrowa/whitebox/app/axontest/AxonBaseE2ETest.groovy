@@ -5,6 +5,8 @@ import io.dabrowa.whitebox.app.SpringAppConfiguration
 import io.dabrowa.whitebox.app.TestAccountNumberProvider
 import io.dabrowa.whitebox.command.aggregates.account.AccountAggregate
 import io.dabrowa.whitebox.command.aggregates.account.AccountNumberService
+import org.axonframework.commandhandling.gateway.CommandGateway
+import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.axonframework.test.aggregate.FixtureConfiguration
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,6 +19,12 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 class AxonBaseE2ETest extends Specification {
 
     FixtureConfiguration<AccountAggregate> fixture
+
+    @Autowired
+    QueryGateway queryGateway
+
+    @Autowired
+    CommandGateway commandGateway
 
     @Autowired
     TestAccountNumberProvider testAccountNumberProvider

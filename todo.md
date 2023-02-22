@@ -12,6 +12,7 @@
 
 - [ ] TODOs
 - [ ] Proper money format (`BigDecimal` instead of `long`)
+- [ ] 
 
 # Project setup improvements
 - [ ] Version management in gradle build files
