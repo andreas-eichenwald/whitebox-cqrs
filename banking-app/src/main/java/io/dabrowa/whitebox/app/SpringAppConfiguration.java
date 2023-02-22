@@ -1,12 +1,11 @@
 package io.dabrowa.whitebox.app;
 
 import io.dabrowa.whitebox.query.handling.BalanceQueryHandler;
+import io.dabrowa.whitebox.query.handling.TransactionsQueryHandler;
 import io.dabrowa.whitebox.query.projection.AccountBalanceProjector;
-import io.dabrowa.whitebox.query.projection.OverdraftProjection;
-import io.dabrowa.whitebox.query.repository.BalanceRepository;
-import io.dabrowa.whitebox.query.repository.InMemoryBalanceRepository;
-import io.dabrowa.whitebox.query.repository.InMemoryLimitRepository;
-import io.dabrowa.whitebox.query.repository.OverdraftLimitRepository;
+import io.dabrowa.whitebox.query.projection.OverdraftProjector;
+import io.dabrowa.whitebox.query.projection.TransactionProjector;
+import io.dabrowa.whitebox.query.repository.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,7 +34,22 @@ public class SpringAppConfiguration {
     }
 
     @Bean
-    public OverdraftProjection overdraftProjection(final OverdraftLimitRepository repository) {
-        return new OverdraftProjection(repository);
+    public OverdraftProjector overdraftProjection(final OverdraftLimitRepository repository) {
+        return new OverdraftProjector(repository);
+    }
+
+    @Bean
+    public TransactionRepository transactionRepository() {
+        return new InMemoryTransactionRepository();
+    }
+
+    @Bean
+    public TransactionsQueryHandler transactionsQueryHandler(final TransactionRepository transactionRepository) {
+        return new TransactionsQueryHandler(transactionRepository);
+    }
+
+    @Bean
+    public TransactionProjector transactionProjector(final TransactionRepository transactionRepository) {
+        return new TransactionProjector(transactionRepository);
     }
 }

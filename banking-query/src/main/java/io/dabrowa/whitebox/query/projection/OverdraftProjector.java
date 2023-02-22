@@ -4,10 +4,10 @@ import io.dabrowa.whitebox.api.events.AccountCreatedEvent;
 import io.dabrowa.whitebox.query.repository.OverdraftLimitRepository;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 
-public class OverdraftProjection {
+public class OverdraftProjector {
     private final OverdraftLimitRepository repository;
 
-    public OverdraftProjection(final OverdraftLimitRepository repository) {
+    public OverdraftProjector(final OverdraftLimitRepository repository) {
         this.repository = repository;
     }
 

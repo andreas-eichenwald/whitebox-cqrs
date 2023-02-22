@@ -1,11 +1,11 @@
 package io.dabrowa.whitebox.command.aggregates.account;
 
 import io.dabrowa.whitebox.api.commands.CreateAccountCommand;
-import io.dabrowa.whitebox.api.events.AccountCreatedEvent;
-import io.dabrowa.whitebox.api.events.AccountDebitedEvent;
 import io.dabrowa.whitebox.api.commands.CreditAccountCommand;
 import io.dabrowa.whitebox.api.commands.DebitAccountCommand;
+import io.dabrowa.whitebox.api.events.AccountCreatedEvent;
 import io.dabrowa.whitebox.api.events.AccountCreditedEvent;
+import io.dabrowa.whitebox.api.events.AccountDebitedEvent;
 import io.dabrowa.whitebox.command.aggregates.account.AccountValidation.AccountValidationException;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -14,6 +14,8 @@ import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.Instant;
 
 @Aggregate
 public class AccountAggregate {
@@ -61,7 +63,13 @@ public class AccountAggregate {
 
     @CommandHandler
     public void handle(final CreditAccountCommand command) {
-        AggregateLifecycle.apply(new AccountCreditedEvent(this.number, command.creditValue()));
+        AggregateLifecycle.apply(
+                new AccountCreditedEvent(
+                        this.number,
+                        command.creditValue(),
+                        Instant.now().toEpochMilli()
+                )
+        );
     }
 
     @CommandHandler
@@ -69,7 +77,13 @@ public class AccountAggregate {
         if (this.balance - command.debitValue() < -this.overdraftLimit) {
             throw new InsufficientFundsException();
         }
-        AggregateLifecycle.apply(new AccountDebitedEvent(this.number, command.debitValue()));
+        AggregateLifecycle.apply(
+                new AccountDebitedEvent(
+                        this.number,
+                        command.debitValue(),
+                        Instant.now().toEpochMilli()
+                )
+        );
     }
 
     @EventSourcingHandler
