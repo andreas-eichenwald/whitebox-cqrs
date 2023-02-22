@@ -6,6 +6,8 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
+import java.util.ConcurrentModificationException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -40,7 +42,7 @@ public class RedisBalanceRepository implements BalanceRepository {
             BigDecimal newBalance = newDebitValue(value, string);
             final Transaction transaction = jedis.multi();
             transaction.set(key, newBalance.toString());
-            transaction.exec();
+            ensureNoConcurrentModification(transaction);
 
             if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
                 jedis.sadd(NEGATIVE_BALANCE_ACCOUNTS_KEY, accountNumber);
@@ -59,11 +61,28 @@ public class RedisBalanceRepository implements BalanceRepository {
             BigDecimal newBalance = newCreditValue(value, string);
             final Transaction transaction = jedis.multi();
             transaction.set(key, newBalance.toString());
-            transaction.exec();
+            ensureNoConcurrentModification(transaction);
 
             if (newBalance.compareTo(BigDecimal.ZERO) >= 0) {
                 jedis.srem(NEGATIVE_BALANCE_ACCOUNTS_KEY, accountNumber);
             }
+        }
+    }
+
+    /**
+     * Since balance operations are of type read-then-write, there is risk
+     * of concurrency issues - after the read, but before write the value could
+     * have been modified, leading to lost updates and incorrect values.
+     * Watch is used to prevent this - if the key was modified since it had been
+     * read, then write transaction will fail.
+     * There could be more sophisticated retry strategy in place,
+     * but this is used in idempotent event handlers, retries can be
+     * delegated to the framework. Besides, this is just to showcase the concept.
+     */
+    private void ensureNoConcurrentModification(final Transaction transaction) {
+        final var transactionResult = transaction.exec();
+        if (transactionResult == null) {
+            throw new ConcurrentModificationException();
         }
     }
 
