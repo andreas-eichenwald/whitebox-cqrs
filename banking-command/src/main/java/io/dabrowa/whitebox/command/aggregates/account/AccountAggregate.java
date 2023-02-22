@@ -37,12 +37,11 @@ public class AccountAggregate {
         accountValidation.validateInitialBalance(command.initialBalance());
         accountValidation.validateOverdraftLimit(command.overdraftLimit());
 
-        final var accountNumber = AccountNumberService.get().getNextAvailable();
-        LOGGER.debug("Creating account {}", accountNumber);
+        LOGGER.debug("Creating account {}", command.number());
 
         AggregateLifecycle.apply(
                 new AccountCreatedEvent(
-                        accountNumber,
+                        command.number(),
                         command.initialBalance(),
                         command.overdraftLimit()
                 )

@@ -6,13 +6,18 @@ import io.dabrowa.whitebox.api.events.AccountCreatedEvent
 import static io.dabrowa.whitebox.command.aggregates.account.AccountValidation.AccountValidationException
 
 class AccountCreationE2ETest extends AxonBaseE2ETest {
+    String accountNumber
+
+    def setup() {
+        accountNumber = testAccountNumberProvider.nextAvailable
+    }
 
     def "cannot create account with negative initial balance"() {
         given:
         def testCase = fixture.givenNoPriorActivity()
 
         when:
-        testCase = testCase.when(new CreateAccountCommand(-100, 100))
+        testCase = testCase.when(new CreateAccountCommand(accountNumber, -100, 100))
 
         then:
         testCase.expectException(AccountValidationException)
@@ -23,7 +28,7 @@ class AccountCreationE2ETest extends AxonBaseE2ETest {
         def testCase = fixture.givenNoPriorActivity()
 
         when:
-        testCase = testCase.when(new CreateAccountCommand(100, -100))
+        testCase = testCase.when(new CreateAccountCommand(accountNumber, 100, -100))
 
         then:
         testCase.expectException(AccountValidationException)
@@ -34,9 +39,9 @@ class AccountCreationE2ETest extends AxonBaseE2ETest {
         def testCase = fixture.givenNoPriorActivity()
 
         when:
-        testCase = testCase.when(new CreateAccountCommand(100, 100))
+        testCase = testCase.when(new CreateAccountCommand(accountNumber, 100, 100))
 
         then:
-        testCase.expectEvents(new AccountCreatedEvent(testAccountNumberProvider.lastGenerated, 100, 100))
+        testCase.expectEvents(new AccountCreatedEvent(accountNumber, 100, 100))
     }
 }

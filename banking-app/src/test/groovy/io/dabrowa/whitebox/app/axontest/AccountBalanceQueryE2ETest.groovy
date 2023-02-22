@@ -5,8 +5,6 @@ import io.dabrowa.whitebox.api.commands.CreditAccountCommand
 import io.dabrowa.whitebox.api.commands.DebitAccountCommand
 import io.dabrowa.whitebox.api.queries.AccountBalanceQuery
 import io.dabrowa.whitebox.api.queries.DebitTestQuery
-import io.dabrowa.whitebox.command.aggregates.account.AccountNumberRegistry
-import io.dabrowa.whitebox.command.aggregates.account.AccountNumberService
 import spock.lang.Unroll
 
 import static io.dabrowa.whitebox.api.queries.DebitTestQuery.DebitTestResult.OPERATION_ALLOWED
@@ -16,16 +14,11 @@ import static org.awaitility.Awaitility.await
 
 class AccountBalanceQueryE2ETest extends AxonBaseE2ETest {
 
-    def accountNumber
-
-    def setup() {
-        accountNumber = testAccountNumberProvider.nextAvailable
-        AccountNumberService.set(Mock(AccountNumberRegistry) { nextAvailable >> accountNumber })
-    }
-
     def "AccountBalanceQuery returns balance for the account"() {
         given:
-        commandGateway.sendAndWait(new CreateAccountCommand(100L, 100L))
+        def accountNumber = testAccountNumberProvider.nextAvailable
+
+        commandGateway.sendAndWait(new CreateAccountCommand(accountNumber, 100L, 100L))
         commandGateway.send(new CreditAccountCommand(accountNumber, 22L))
         commandGateway.send(new DebitAccountCommand(accountNumber, 11L))
         commandGateway.send(new CreditAccountCommand(accountNumber, 33L))
@@ -43,7 +36,8 @@ class AccountBalanceQueryE2ETest extends AxonBaseE2ETest {
     @Unroll
     def "DebitTestQuery returns information about balance overdraft"() {
         given:
-        commandGateway.sendAndWait(new CreateAccountCommand(65L, 33L))
+        def accountNumber = testAccountNumberProvider.nextAvailable
+        commandGateway.sendAndWait(new CreateAccountCommand(accountNumber, 65L, 33L))
         def query = new DebitTestQuery(accountNumber, debitValue)
 
         expect:

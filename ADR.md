@@ -1,45 +1,46 @@
-# 2023-02-15 Use Apache Axon framework
+# ADRs: Architectural Decision Records
 
-Lorem ipsum
+This is a chronologically ordered log of high-impact decisions made during the development of the application in this repository.
+Its goal is to document the context, problems and chosen solutions. This knowledge should be used in the future
+to reason about those decisions and re-evaluate them in new reality should circumstances change.
+It's simplified for the use in this task.
 
-# 2023-02-18 Use transactional materialized view of taken account numbers
+## 2023-02-15 Use Apache Axon framework
 
-## Problem
+Even though task requirements don't explicitly require it, this project will be implemented using
+Apache Axon framework as Event Store and message bus. 
 
-`CreateAccountCommand` should only ever succeed if given account number is not yet used.
-There are multiple approaches to solving this issue: client-side validations, using sagas to resolve double-allocated 
-numbers or using command-side store of allocated numbers.
+Decision criteria:
+* Established position in the community (popular solution)
+* Low learning curve, mostly due to plenty of learning resources available
+* Integration with Spring Boot allows for rapid prototyping
 
-https://stackoverflow.com/questions/31386244/cqrs-event-sourcing-check-username-is-unique-or-not-from-eventstore-while-sendin
-http://cqrs.nu/Faq
+## ~~2023-02-19 Central static account number generator~~ (Reverted 2023-02-20)
 
-## Chosen Solution
+### ~~Problem~~
 
-Eventual consistency is not enough for the matter as critical as account number uniqueness. 
-Potential business and financial consequences of double allocating are dire. 
-For this reason, transactional storage on the command handler will be used to list taken account numbers
-and `CreateAccountCommand` will only succeed if successful lock was acquired on the account number. 
+~~Initial design introduced external component for handling `CreateAccountCommand` - `AccountFactory`.~~
+~~This was an object orchestrating account number generation and re-emitting `AccountCreatedEvent`.~~
+~~It was nicely composable, allowing injection of different strategies for account number generation~~
+~~and has testable event handler that did not require Axon server running (see parent commit for this one).~~
 
+~~However, Axon did not seem to like it: it requires Aggregate lifecycle events to only be emitted~~
+~~from inside the Aggregate itself, not from external component. This design caused~~
+~~`java.lang.IllegalStateException: Cannot request current Scope if none is active` being thrown.~~
 
-# 2023-02-19 Central static account number generator
+~~The recommended way is to handle creation commands in the constructor of the aggregate.~~
+~~However, this does not allow for injecting additional strategies or composable behavior.~~
+~~This seems to be either framework limitation or the issue with my limited current knowledge of the framework,~~
+~~or even CQRS/ES approach itself.~~
+~~In order to be able to progress with the task, I am introducing ugly hack as a quick solution:~~
+~~piece of static singleton that can be supplied at runtime and modified in tests. This should~~
+~~allow to inject number generation strategy until more canonical and valid solution is identified.~~
 
-## Problem
+~~Link: https://discuss.axoniq.io/t/cannot-request-current-scope-if-none-is-active/1683/4~~
 
-Initial design introduced external component for handling `CreateAccountCommand` - `AccountFactory`.
-This was an object orchestrating account number generation and re-emitting `AccountCreatedEvent`.
-It was nicely composable, allowing injection of different strategies for account number generation
-and has testable event handler that did not require Axon server running (see parent commit for this one).
+## 2023-02-20 Use externally provided account number
 
-However, Axon did not seem to like it: it requires Aggregate lifecycle events to only be emitted
-from inside the Aggregate itself, not from external component. This design caused 
-`java.lang.IllegalStateException: Cannot request current Scope if none is active` being thrown.
-
-The recommended way is to handle creation commands in the constructor of the aggregate.
-However, this does not allow for injecting additional strategies or composable behavior.
-This seems to be either framework limitation or the issue with my limited current knowledge of the framework,
-or even CQRS/ES approach itself.
-In order to be able to progress with the task, I am introducing ugly hack as a quick solution:
-piece of static singleton that can be supplied at runtime and modified in tests. This should
-allow to inject number generation strategy until more canonical and valid solution is identified.
-
-Link: https://discuss.axoniq.io/t/cannot-request-current-scope-if-none-is-active/1683/4
+To resolve issues described in `2023-02-19 Central static account number generator`, new approach was taken:
+account number will now be externally locked and decided. Maybe it should even be an aggregate on it's own?
+High level outcome is that `AccountAggregate` now assumes `CreateAccountCommand` to have valid and unique
+account number in it. 

@@ -4,7 +4,6 @@ import io.dabrowa.whitebox.app.Main
 import io.dabrowa.whitebox.app.SpringAppConfiguration
 import io.dabrowa.whitebox.app.TestAccountNumberProvider
 import io.dabrowa.whitebox.command.aggregates.account.AccountAggregate
-import io.dabrowa.whitebox.command.aggregates.account.AccountNumberService
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.test.aggregate.AggregateTestFixture
@@ -29,9 +28,6 @@ class AxonBaseE2ETest extends Specification {
     @Autowired
     TestAccountNumberProvider testAccountNumberProvider
 
-    def setupSpec() {
-        AccountNumberService.set(new TestAccountNumberProvider())
-    }
 
     def setup() {
         fixture = new AggregateTestFixture<>(AccountAggregate)
