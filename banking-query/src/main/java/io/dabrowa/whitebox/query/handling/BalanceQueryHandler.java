@@ -9,8 +9,7 @@ import io.dabrowa.whitebox.query.repository.BalanceRepository;
 import io.dabrowa.whitebox.query.repository.OverdraftLimitRepository;
 import org.axonframework.queryhandling.QueryHandler;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 import static io.dabrowa.whitebox.api.queries.DebitTestQuery.DebitTestResult.OPERATION_ALLOWED;
 import static io.dabrowa.whitebox.api.queries.DebitTestQuery.DebitTestResult.OPERATION_FORBIDDEN;
@@ -54,8 +53,8 @@ public class BalanceQueryHandler {
     }
 
     @QueryHandler
-    public List<String> handle(final AccountsInTheRedQuery query) {
-        return Collections.emptyList();
+    public AccountsInTheRedQuery.Response handle(final AccountsInTheRedQuery query) {
+        return new AccountsInTheRedQuery.Response(Set.copyOf(balanceRepository.accountsWithNegativeBalance()));
     }
 
     private boolean transactionExceedsOverdraftLimit(final long accountBalance,

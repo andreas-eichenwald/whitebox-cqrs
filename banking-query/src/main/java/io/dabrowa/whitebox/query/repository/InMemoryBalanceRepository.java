@@ -1,5 +1,8 @@
 package io.dabrowa.whitebox.query.repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -8,6 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
 
 public class InMemoryBalanceRepository implements BalanceRepository {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InMemoryBalanceRepository.class);
+
     private final Map<String, Long> accountBalances = new ConcurrentHashMap<>();
 
     @Override
@@ -20,6 +25,7 @@ public class InMemoryBalanceRepository implements BalanceRepository {
 
     @Override
     public void debit(final String accountNumber, final long value) {
+        LOGGER.debug("Debiting account {} for {}", accountNumber, value);
         accountBalances.compute(accountNumber, (_accountNumber, oldBalance) -> {
             if (oldBalance == null) {
                 return -value;
@@ -31,6 +37,7 @@ public class InMemoryBalanceRepository implements BalanceRepository {
 
     @Override
     public void credit(final String accountNumber, final long value) {
+        LOGGER.debug("Crediting account {} for {}", accountNumber, value);
         accountBalances.compute(accountNumber, (_accountNumber, oldBalance) -> {
             if (oldBalance == null) {
                 return value;
@@ -46,5 +53,9 @@ public class InMemoryBalanceRepository implements BalanceRepository {
                 .filter(entry -> entry.getValue() < 0)
                 .map(Map.Entry::getKey)
                 .collect(toList());
+    }
+
+    void cleanup() {
+        this.accountBalances.clear();
     }
 }
