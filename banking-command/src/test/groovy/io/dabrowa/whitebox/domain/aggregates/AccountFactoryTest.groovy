@@ -2,9 +2,9 @@ package io.dabrowa.whitebox.domain.aggregates
 
 import io.dabrowa.whitebox.command.aggregates.account.AccountFactory
 import io.dabrowa.whitebox.command.aggregates.account.AccountNumberRegistry
-import io.dabrowa.whitebox.command.commands.CreateAccountCommand
-import io.dabrowa.whitebox.command.events.AccountCreatedEvent
-import io.dabrowa.whitebox.command.events.Event
+import io.dabrowa.whitebox.api.commands.CreateAccountCommand
+import io.dabrowa.whitebox.api.events.AccountCreatedEvent
+import io.dabrowa.whitebox.api.events.Event
 import spock.lang.Specification
 import spock.lang.Unroll
 

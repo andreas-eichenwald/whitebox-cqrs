@@ -1,6 +1,6 @@
 package io.dabrowa.whitebox.http;
 
-import io.dabrowa.whitebox.command.commands.CreateAccountCommand;
+import io.dabrowa.whitebox.api.commands.CreateAccountCommand;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

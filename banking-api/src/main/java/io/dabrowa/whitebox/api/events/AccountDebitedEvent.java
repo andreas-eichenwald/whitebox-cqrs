@@ -1,4 +1,4 @@
-package io.dabrowa.whitebox.command.events;
+package io.dabrowa.whitebox.api.events;
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 

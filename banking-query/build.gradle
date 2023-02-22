@@ -5,7 +5,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(":banking-command")
+    implementation project(":banking-api")
 
     implementation 'org.axonframework:axon-spring-boot-starter:4.7.1'
     implementation 'org.axonframework:axon-test:4.7.1'

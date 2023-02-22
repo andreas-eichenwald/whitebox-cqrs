@@ -1,8 +1,8 @@
 package io.dabrowa.whitebox.command.aggregates.account;
 
-import io.dabrowa.whitebox.command.commands.CreateAccountCommand;
-import io.dabrowa.whitebox.command.events.AccountCreatedEvent;
-import io.dabrowa.whitebox.command.events.Event;
+import io.dabrowa.whitebox.api.commands.CreateAccountCommand;
+import io.dabrowa.whitebox.api.events.AccountCreatedEvent;
+import io.dabrowa.whitebox.api.events.Event;
 import org.axonframework.commandhandling.CommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

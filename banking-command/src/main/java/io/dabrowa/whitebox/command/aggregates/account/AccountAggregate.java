@@ -1,10 +1,10 @@
 package io.dabrowa.whitebox.command.aggregates.account;
 
-import io.dabrowa.whitebox.command.events.AccountCreatedEvent;
-import io.dabrowa.whitebox.command.events.AccountDebitedEvent;
-import io.dabrowa.whitebox.command.commands.CreditAccountCommand;
-import io.dabrowa.whitebox.command.commands.DebitAccountCommand;
-import io.dabrowa.whitebox.command.events.AccountCreditedEvent;
+import io.dabrowa.whitebox.api.events.AccountCreatedEvent;
+import io.dabrowa.whitebox.api.events.AccountDebitedEvent;
+import io.dabrowa.whitebox.api.commands.CreditAccountCommand;
+import io.dabrowa.whitebox.api.commands.DebitAccountCommand;
+import io.dabrowa.whitebox.api.events.AccountCreditedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;

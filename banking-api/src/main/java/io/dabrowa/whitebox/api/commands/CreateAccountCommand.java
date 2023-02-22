@@ -1,4 +1,4 @@
-package io.dabrowa.whitebox.command.commands;
+package io.dabrowa.whitebox.api.commands;
 
 public record CreateAccountCommand(long initialBalance, long overdraftLimit) {
 }
