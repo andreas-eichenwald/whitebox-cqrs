@@ -1,14 +1,14 @@
 package io.dabrowa.whitebox.query;
 
-import io.dabrowa.whitebox.domain.queries.AccountBalanceQuery;
-import io.dabrowa.whitebox.domain.queries.DebitTestQuery;
-import io.dabrowa.whitebox.domain.queries.DebitTestQuery.DebitTestResult;
+import io.dabrowa.whitebox.command.queries.AccountBalanceQuery;
+import io.dabrowa.whitebox.command.queries.DebitTestQuery;
+import io.dabrowa.whitebox.command.queries.DebitTestQuery.DebitTestResult;
 import io.dabrowa.whitebox.query.repository.BalanceRepository;
 import io.dabrowa.whitebox.query.repository.OverdraftLimitRepository;
 import org.axonframework.queryhandling.QueryHandler;
 
-import static io.dabrowa.whitebox.domain.queries.DebitTestQuery.DebitTestResult.OPERATION_ALLOWED;
-import static io.dabrowa.whitebox.domain.queries.DebitTestQuery.DebitTestResult.OPERATION_FORBIDDEN;
+import static io.dabrowa.whitebox.command.queries.DebitTestQuery.DebitTestResult.OPERATION_ALLOWED;
+import static io.dabrowa.whitebox.command.queries.DebitTestQuery.DebitTestResult.OPERATION_FORBIDDEN;
 
 public class BalanceQueryHandler {
     public static class AccountDoesNotExist extends Exception {

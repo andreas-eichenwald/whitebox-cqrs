@@ -1,5 +1,5 @@
 rootProject.name = 'whitebox-cqrs-es'
 
-include 'banking-domain'
+include 'banking-command'
 include 'banking-app'
 include 'banking-query'

@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(":banking-domain")
+    implementation project(":banking-command")
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.axonframework:axon-spring-boot-starter:4.7.1'
