@@ -16,7 +16,7 @@ public class AccountBalanceProjector {
 
     @EventSourcingHandler
     public void on(final AccountCreatedEvent event) {
-        balanceRepository.credit(event.accountId(), event.initialBalance());
+        balanceRepository.credit(event.accountNumber(), event.initialBalance());
     }
 
     @EventSourcingHandler
