@@ -6,7 +6,6 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -38,12 +37,7 @@ public class RedisBalanceRepository implements BalanceRepository {
             jedis.watch(key);
             final var string = jedis.get(key);
 
-            BigDecimal newBalance;
-            if (string == null) {
-                newBalance = value.negate();
-            } else {
-                newBalance = new BigDecimal(string).subtract(value);
-            }
+            BigDecimal newBalance = newDebitValue(value, string);
             final Transaction transaction = jedis.multi();
             transaction.set(key, newBalance.toString());
             transaction.exec();
@@ -62,12 +56,7 @@ public class RedisBalanceRepository implements BalanceRepository {
             jedis.watch(key);
             final var string = jedis.get(key);
 
-            BigDecimal newBalance;
-            if (string == null) {
-                newBalance = value;
-            } else {
-                newBalance = new BigDecimal(string).add(value);
-            }
+            BigDecimal newBalance = newCreditValue(value, string);
             final Transaction transaction = jedis.multi();
             transaction.set(key, newBalance.toString());
             transaction.exec();
@@ -82,6 +71,22 @@ public class RedisBalanceRepository implements BalanceRepository {
     public Set<String> accountsWithNegativeBalance() {
         try (final Jedis jedis = jedisPool.getResource()) {
             return Set.copyOf(jedis.smembers(NEGATIVE_BALANCE_ACCOUNTS_KEY));
+        }
+    }
+
+    private BigDecimal newCreditValue(BigDecimal value, String string) {
+        if (string == null) {
+            return value;
+        } else {
+            return new BigDecimal(string).add(value);
+        }
+    }
+
+    private BigDecimal newDebitValue(BigDecimal value, String string) {
+        if (string == null) {
+            return value.negate();
+        } else {
+            return new BigDecimal(string).subtract(value);
         }
     }
 

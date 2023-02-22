@@ -32,11 +32,13 @@ dependencies {
 }
 
 dockerCompose.isRequiredBy(test)
-dockerCompose.stopContainers = false // switch to 'false' for quick iteration during development
+dockerCompose.stopContainers = true // switch to 'false' for quick iteration during development
 
 test.doFirst {
     // expose dockerized Axon server's port to Spring configuration
     environment "AXON_PORT", dockerCompose.servicesInfos['axon-server'].tcpPorts[8124]
+    environment "REDIS_PORT", dockerCompose.servicesInfos['redis'].tcpPorts[6379]
+    environment "REDIS_HOST", "localhost"
 }
 
 test {

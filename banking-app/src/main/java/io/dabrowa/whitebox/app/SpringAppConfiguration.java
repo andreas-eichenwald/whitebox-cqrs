@@ -7,6 +7,7 @@ import io.dabrowa.whitebox.query.projection.OverdraftProjector;
 import io.dabrowa.whitebox.query.projection.TransactionProjector;
 import io.dabrowa.whitebox.query.repository.*;
 import io.dabrowa.whitebox.query.repository.BalanceRepository.NonNegativeValuesRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.JedisPool;
@@ -51,8 +52,9 @@ public class SpringAppConfiguration {
     }
 
     @Bean
-    public JedisPool jedisPool() {
-        return new JedisPool("localhost", 6379);
+    public JedisPool jedisPool(@Value("${app.redis.host}") final String redisHost,
+                               @Value("${app.redis.port}") final int redisPort) {
+        return new JedisPool(redisHost, redisPort);
     }
 
     @Bean
