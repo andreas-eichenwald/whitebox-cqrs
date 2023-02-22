@@ -22,8 +22,8 @@ public class AccountController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> create(@RequestParam final String id, @RequestParam final long overdraftLimit, @RequestParam final long initialBalance) {
-        commandGateway.send(new CreateAccountCommand(id, initialBalance, overdraftLimit));
+    public ResponseEntity<Void> create(@RequestParam final long overdraftLimit, @RequestParam final long initialBalance) {
+        commandGateway.send(new CreateAccountCommand(initialBalance, overdraftLimit));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
