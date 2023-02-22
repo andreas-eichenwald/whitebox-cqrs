@@ -3,6 +3,8 @@ package io.dabrowa.whitebox.http;
 import io.dabrowa.whitebox.domain.commands.CreateAccountCommand;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +21,9 @@ public class AccountController {
         this.commandGateway = commandGateway;
     }
 
-    @PutMapping("/")
-    public void create(@RequestParam final String id, @RequestParam final long overdraftLimit, @RequestParam final long initialBalance) {
+    @PutMapping
+    public ResponseEntity<Void> create(@RequestParam final String id, @RequestParam final long overdraftLimit, @RequestParam final long initialBalance) {
         commandGateway.send(new CreateAccountCommand(id, initialBalance, overdraftLimit));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

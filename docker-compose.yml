@@ -1,0 +1,6 @@
+services:
+  axon-server:
+    image: "axoniq/axonserver:4.6.9"
+    ports:
+      - "8024:8024"
+      - "8124:8124"
