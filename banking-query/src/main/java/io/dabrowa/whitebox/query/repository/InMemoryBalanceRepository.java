@@ -3,6 +3,7 @@ package io.dabrowa.whitebox.query.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,10 +14,10 @@ import static java.util.stream.Collectors.toList;
 public class InMemoryBalanceRepository implements BalanceRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(InMemoryBalanceRepository.class);
 
-    private final Map<String, Long> accountBalances = new ConcurrentHashMap<>();
+    private final Map<String, BigDecimal> accountBalances = new ConcurrentHashMap<>();
 
     @Override
-    public Optional<Long> getBalance(final String accountNumber) {
+    public Optional<BigDecimal> getBalance(final String accountNumber) {
         if (accountBalances.containsKey(accountNumber)) {
             return Optional.of(accountBalances.get(accountNumber));
         }
@@ -24,25 +25,25 @@ public class InMemoryBalanceRepository implements BalanceRepository {
     }
 
     @Override
-    public void debit(final String accountNumber, final long value) {
+    public void debit(final String accountNumber, final BigDecimal value) {
         LOGGER.debug("Debiting account {} for {}", accountNumber, value);
         accountBalances.compute(accountNumber, (_accountNumber, oldBalance) -> {
             if (oldBalance == null) {
-                return -value;
+                return value.negate();
             } else {
-                return oldBalance - value;
+                return oldBalance.subtract(value);
             }
         });
     }
 
     @Override
-    public void credit(final String accountNumber, final long value) {
+    public void credit(final String accountNumber, final BigDecimal value) {
         LOGGER.debug("Crediting account {} for {}", accountNumber, value);
         accountBalances.compute(accountNumber, (_accountNumber, oldBalance) -> {
             if (oldBalance == null) {
                 return value;
             } else {
-                return oldBalance + value;
+                return oldBalance.add(value);
             }
         });
     }
@@ -50,12 +51,12 @@ public class InMemoryBalanceRepository implements BalanceRepository {
     @Override
     public List<String> accountsWithNegativeBalance() {
         return accountBalances.entrySet().stream()
-                .filter(entry -> entry.getValue() < 0)
+                .filter(entry -> entry.getValue().compareTo(BigDecimal.ZERO) < 0)
                 .map(Map.Entry::getKey)
                 .collect(toList());
     }
 
-    void cleanup() {
+    public void cleanup() {
         this.accountBalances.clear();
     }
 }

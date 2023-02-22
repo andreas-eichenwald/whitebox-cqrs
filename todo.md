@@ -11,7 +11,7 @@
 # Implementation improvements
 
 - [x] TODOs
-- [ ] Proper money format (`BigDecimal` instead of `long`)
+- [x] Proper money format (`BigDecimal` instead of `long`)
 
 # Project setup improvements
 - [x] Version management in gradle build files

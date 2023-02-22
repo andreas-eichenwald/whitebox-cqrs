@@ -1,19 +1,20 @@
 package io.dabrowa.whitebox.query.repository;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class InMemoryLimitRepository implements OverdraftLimitRepository {
 
-    private final Map<String, Long> perAccountLimits;
+    private final Map<String, BigDecimal> perAccountLimits;
 
     public InMemoryLimitRepository() {
         this.perAccountLimits = new HashMap<>();
     }
 
     @Override
-    public Optional<Long> overdraftLimitFor(final String accountNumber) {
+    public Optional<BigDecimal> overdraftLimitFor(final String accountNumber) {
         if (perAccountLimits.containsKey(accountNumber)) {
             return Optional.of(perAccountLimits.get(accountNumber));
         }
@@ -21,7 +22,7 @@ public class InMemoryLimitRepository implements OverdraftLimitRepository {
     }
 
     @Override
-    public void saveOverdraftLimit(final String accountNumber, final long overdraftLimit) {
+    public void saveOverdraftLimit(final String accountNumber, final BigDecimal overdraftLimit) {
         perAccountLimits.put(accountNumber, overdraftLimit);
     }
 }

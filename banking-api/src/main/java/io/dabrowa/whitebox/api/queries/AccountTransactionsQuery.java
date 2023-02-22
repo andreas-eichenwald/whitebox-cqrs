@@ -1,5 +1,6 @@
 package io.dabrowa.whitebox.api.queries;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * @see java.time.Instant#ofEpochMilli(long)
  */
 public record AccountTransactionsQuery(String accountNumber, long epochMillis) {
-    public record Transaction(long occurredAtEpochMillis, TransactionType type, long transactionValue) {
+    public record Transaction(long occurredAtEpochMillis, TransactionType type, BigDecimal transactionValue) {
     }
 
     public enum TransactionType {

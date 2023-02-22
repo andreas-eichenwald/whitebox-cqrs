@@ -1,5 +1,6 @@
 package io.dabrowa.whitebox.app.axontest
 
+
 import io.dabrowa.whitebox.api.commands.CreateAccountCommand
 import io.dabrowa.whitebox.app.Main
 import io.dabrowa.whitebox.app.SpringAppConfiguration
@@ -42,7 +43,7 @@ class AxonBaseE2ETest extends Specification {
         inMemoryBalanceRepository.cleanup()
     }
 
-    String setupAccount(long initialBalance, long overdraftLimit) {
+    String setupAccount(BigDecimal initialBalance, BigDecimal overdraftLimit) {
         def accountNumber = testAccountNumberProvider.nextAvailable
         commandGateway.sendAndWait(new CreateAccountCommand(accountNumber, initialBalance, overdraftLimit))
         return accountNumber

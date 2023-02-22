@@ -15,28 +15,28 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Aggregate
 public class AccountAggregate {
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountAggregate.class);
 
+    private final AccountValidation accountValidation;
+
     public static class InsufficientFundsException extends Exception {
-        public InsufficientFundsException(String accountNumber, long amount) {
-            super("Cannot debit account " + accountNumber + " with " + amount);
-        }
     }
 
     @AggregateIdentifier
     private String number;
 
-    private long overdraftLimit;
+    private BigDecimal overdraftLimit;
 
-    private long balance;
+    private BigDecimal balance;
 
     @CommandHandler
     public AccountAggregate(final CreateAccountCommand command) throws AccountValidationException {
-        final var accountValidation = new AccountValidation();
+        this();
 
         accountValidation.validateInitialBalance(command.initialBalance());
         accountValidation.validateOverdraftLimit(command.overdraftLimit());
@@ -53,6 +53,7 @@ public class AccountAggregate {
     }
 
     AccountAggregate() {
+        this.accountValidation = new AccountValidation();
     }
 
     @EventSourcingHandler
@@ -76,9 +77,7 @@ public class AccountAggregate {
 
     @CommandHandler
     public void handle(final DebitAccountCommand command) throws InsufficientFundsException {
-        if (this.balance - command.debitValue() < -this.overdraftLimit) {
-            throw new InsufficientFundsException(command.accountNumber(), command.debitValue());
-        }
+        accountValidation.validateDebitOperation(balance, overdraftLimit, command.debitValue());
         AggregateLifecycle.apply(
                 new AccountDebitedEvent(
                         this.number,
@@ -90,23 +89,23 @@ public class AccountAggregate {
 
     @EventSourcingHandler
     public void on(final AccountCreditedEvent event) {
-        this.balance += event.creditValue();
+        this.balance = this.balance.add(event.creditValue());
     }
 
     @EventSourcingHandler
     public void on(final AccountDebitedEvent event) {
-        this.balance -= event.debitValue();
+        this.balance = this.balance.subtract(event.debitValue());
     }
 
     public String getNumber() {
         return number;
     }
 
-    public long getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public long getOverdraftLimit() {
+    public BigDecimal getOverdraftLimit() {
         return overdraftLimit;
     }
 }

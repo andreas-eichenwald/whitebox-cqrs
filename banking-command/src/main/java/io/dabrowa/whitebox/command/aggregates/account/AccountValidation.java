@@ -1,5 +1,7 @@
 package io.dabrowa.whitebox.command.aggregates.account;
 
+import java.math.BigDecimal;
+
 public class AccountValidation {
     public static class AccountValidationException extends Exception {
         public AccountValidationException(String message) {
@@ -7,15 +9,23 @@ public class AccountValidation {
         }
     }
 
-    public void validateInitialBalance(final long initialBalance) throws AccountValidationException {
-        if(initialBalance < 0) {
+    public void validateInitialBalance(final BigDecimal initialBalance) throws AccountValidationException {
+        if (initialBalance.compareTo(BigDecimal.ZERO) < 0) {
             throw new AccountValidationException("Account's initial balance cannot be negative");
         }
     }
 
-    public void validateOverdraftLimit(final long overdraftLimit) throws AccountValidationException {
-        if(overdraftLimit < 0) {
+    public void validateOverdraftLimit(final BigDecimal overdraftLimit) throws AccountValidationException {
+        if (overdraftLimit.compareTo(BigDecimal.ZERO) < 0) {
             throw new AccountValidationException("Account's overdraft limit cannot be negative");
+        }
+    }
+
+    public void validateDebitOperation(final BigDecimal balance, final BigDecimal overdraftLimit, final BigDecimal debitValue) throws AccountAggregate.InsufficientFundsException {
+        var postTransactionBalance = balance.subtract(debitValue);
+        var lowestAllowedBalance = overdraftLimit.negate();
+        if (postTransactionBalance.compareTo(lowestAllowedBalance) < 0) {
+            throw new AccountAggregate.InsufficientFundsException();
         }
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
+
 @Controller
 @RequestMapping(path = "/api/v1/accounts")
 public class AccountController {
@@ -22,7 +24,7 @@ public class AccountController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> create(@RequestParam final String number, @RequestParam final long overdraftLimit, @RequestParam final long initialBalance) {
+    public ResponseEntity<Void> create(@RequestParam final String number, @RequestParam final BigDecimal overdraftLimit, @RequestParam final BigDecimal initialBalance) {
         commandGateway.send(new CreateAccountCommand(number, initialBalance, overdraftLimit));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

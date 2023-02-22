@@ -1,9 +1,10 @@
 package io.dabrowa.whitebox.query.repository;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface OverdraftLimitRepository {
-    Optional<Long> overdraftLimitFor(String accountNumber);
+    Optional<BigDecimal> overdraftLimitFor(String accountNumber);
 
-    void saveOverdraftLimit(String accountNumber, long overdraftLimit);
+    void saveOverdraftLimit(String accountNumber, BigDecimal overdraftLimit);
 }
