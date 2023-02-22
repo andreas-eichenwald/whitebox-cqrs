@@ -9,7 +9,6 @@
 - [ ] It should be possible to receive a list of all bank accounts in the red, i.e., whose account balance is lower than zero.
 
 # Implementation improvements
-- Validate on account creation:
-  - [x] Account number format
-  - [x] Deposit and credit line > 0
-- Proper money format (`BigDecimal` instead of `long`)
+
+- [ ] TODOs
+- [ ] Proper money format (`BigDecimal` instead of `long`)
