@@ -6,16 +6,13 @@ import io.dabrowa.whitebox.query.projection.AccountBalanceProjector;
 import io.dabrowa.whitebox.query.projection.OverdraftProjector;
 import io.dabrowa.whitebox.query.projection.TransactionProjector;
 import io.dabrowa.whitebox.query.repository.*;
+import io.dabrowa.whitebox.query.repository.BalanceRepository.NonNegativeValuesRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import redis.clients.jedis.JedisPool;
 
 @Configuration
 public class SpringAppConfiguration {
-
-    @Bean
-    public BalanceRepository balanceRepository() {
-        return new InMemoryBalanceRepository();
-    }
 
     @Bean
     public OverdraftLimitRepository overdraftLimitRepository() {
@@ -51,5 +48,15 @@ public class SpringAppConfiguration {
     @Bean
     public TransactionProjector transactionProjector(final TransactionRepository transactionRepository) {
         return new TransactionProjector(transactionRepository);
+    }
+
+    @Bean
+    public JedisPool jedisPool() {
+        return new JedisPool("localhost", 6379);
+    }
+
+    @Bean
+    public BalanceRepository repository(final JedisPool jedisPool) {
+        return new NonNegativeValuesRepository(new RedisBalanceRepository(jedisPool));
     }
 }
