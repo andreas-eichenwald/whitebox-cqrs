@@ -6,9 +6,6 @@ import io.dabrowa.whitebox.api.queries.AccountTransactionsQuery.Transaction;
 import io.dabrowa.whitebox.query.repository.TransactionRepository;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 import static io.dabrowa.whitebox.api.queries.AccountTransactionsQuery.TransactionType.CREDIT;
 import static io.dabrowa.whitebox.api.queries.AccountTransactionsQuery.TransactionType.DEBIT;
 

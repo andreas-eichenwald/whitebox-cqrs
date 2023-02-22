@@ -2,7 +2,6 @@ package io.dabrowa.whitebox.query.repository;
 
 import io.dabrowa.whitebox.api.queries.AccountTransactionsQuery.Transaction;
 
-import java.time.Instant;
 import java.util.List;
 
 public interface TransactionRepository {
