@@ -21,6 +21,8 @@ dependencies {
     implementation platform("org.axonframework:axon-bom:$axonVersion")
     implementation 'org.axonframework:axon-spring-boot-starter'
 
+    implementation "redis.clients:jedis:$jedisVersion"
+
     testImplementation platform("org.spockframework:spock-bom:$spockVersion")
     testImplementation "org.spockframework:spock-core"
     testImplementation "org.spockframework:spock-spring"
@@ -35,6 +37,8 @@ dockerCompose.stopContainers = true // switch to 'false' for quick iteration dur
 test.doFirst {
     // expose dockerized Axon server's port to Spring configuration
     environment "AXON_PORT", dockerCompose.servicesInfos['axon-server'].tcpPorts[8124]
+    environment "REDIS_PORT", dockerCompose.servicesInfos['redis'].tcpPorts[6379]
+    environment "REDIS_HOST", "localhost"
 }
 
 test {

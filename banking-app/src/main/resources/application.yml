@@ -1,3 +1,7 @@
+app:
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
 axon:
   axonserver:
     servers: localhost:${AXON_PORT}

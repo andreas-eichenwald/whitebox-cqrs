@@ -4,12 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 public class InMemoryBalanceRepository implements BalanceRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(InMemoryBalanceRepository.class);
@@ -49,11 +49,11 @@ public class InMemoryBalanceRepository implements BalanceRepository {
     }
 
     @Override
-    public List<String> accountsWithNegativeBalance() {
+    public Set<String> accountsWithNegativeBalance() {
         return accountBalances.entrySet().stream()
                 .filter(entry -> entry.getValue().compareTo(BigDecimal.ZERO) < 0)
                 .map(Map.Entry::getKey)
-                .collect(toList());
+                .collect(toSet());
     }
 
     public void cleanup() {
