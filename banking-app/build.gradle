@@ -32,6 +32,11 @@ dependencies {
 dockerCompose.isRequiredBy(test)
 dockerCompose.stopContainers = false // switch to 'false' for quick iteration during development
 
+test.doFirst {
+    // expose dockerized Axon server's port to Spring configuration
+    environment "AXON_PORT", dockerCompose.servicesInfos['axon-server'].tcpPorts[8124]
+}
+
 test {
     useJUnitPlatform()
     testLogging {

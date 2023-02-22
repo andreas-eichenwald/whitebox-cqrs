@@ -1,4 +1,6 @@
 axon:
+  axonserver:
+    servers: localhost:${AXON_PORT}
   serializer:
     general: jackson
     events: jackson
