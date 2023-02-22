@@ -2,7 +2,7 @@
 
 Recruitment task for Java Engineer position @ Whitebox.
 
-**Author:** Jędrzej Dąbrowa (@jdabrowa)
+**Author:** jd
 
 It is a Java (version 17) application built by Gradle, with Spring Boot as application framework
 and Apache Axon as CQRS/ES framework (backed by dockerized Axon Server in test).
