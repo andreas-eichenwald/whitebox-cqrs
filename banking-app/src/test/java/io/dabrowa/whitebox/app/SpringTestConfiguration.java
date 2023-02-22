@@ -1,6 +1,5 @@
 package io.dabrowa.whitebox.app;
 
-import io.dabrowa.whitebox.command.aggregates.account.AccountNumberRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -10,7 +9,7 @@ public class SpringTestConfiguration {
 
     @Bean
     @Primary
-    public AccountNumberRegistry accountNumberRegistry() {
+    public TestAccountNumberProvider accountNumberRegistry() {
         return new TestAccountNumberProvider();
     }
 }

@@ -33,4 +33,15 @@ class AccountCreationE2ETest extends AxonBaseE2ETest {
         then:
         testCase.expectException(AccountValidationException)
     }
+
+    def "creating valid account results in AccountCreatedEvent"() {
+        given:
+        def testCase = fixture.givenNoPriorActivity()
+
+        when:
+        testCase = testCase.when(new CreateAccountCommand(100, 100))
+
+        then:
+        testCase.expectEvents(new AccountCreatedEvent(testAccountNumberProvider.lastGenerated, 100, 100))
+    }
 }

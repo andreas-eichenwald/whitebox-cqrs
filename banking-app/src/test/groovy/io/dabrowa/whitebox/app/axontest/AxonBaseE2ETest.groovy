@@ -2,8 +2,9 @@ package io.dabrowa.whitebox.app.axontest
 
 import io.dabrowa.whitebox.app.Main
 import io.dabrowa.whitebox.app.SpringAppConfiguration
+import io.dabrowa.whitebox.app.TestAccountNumberProvider
 import io.dabrowa.whitebox.command.aggregates.account.AccountAggregate
-import io.dabrowa.whitebox.command.aggregates.account.AccountFactory
+import io.dabrowa.whitebox.command.aggregates.account.AccountNumberService
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.axonframework.test.aggregate.FixtureConfiguration
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,10 +19,13 @@ class AxonBaseE2ETest extends Specification {
     FixtureConfiguration<AccountAggregate> fixture
 
     @Autowired
-    AccountFactory accountFactory
+    TestAccountNumberProvider testAccountNumberProvider
+
+    def setupSpec() {
+        AccountNumberService.set(new TestAccountNumberProvider())
+    }
 
     def setup() {
         fixture = new AggregateTestFixture<>(AccountAggregate)
-        fixture.registerAnnotatedCommandHandler(accountFactory)
     }
 }

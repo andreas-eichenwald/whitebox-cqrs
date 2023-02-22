@@ -19,6 +19,10 @@ public class TestAccountNumberProvider implements AccountNumberRegistry {
         return asAccountNumber(nextLongId);
     }
 
+    public String getLastGenerated() {
+        return asAccountNumber(nextAccountNumber.get());
+    }
+
     private String asAccountNumber(final long longId) {
         final var shortString = String.valueOf(longId);
         final var trailingZerosNumber = ACCOUNT_NUMBER_DIGITS - shortString.length();
