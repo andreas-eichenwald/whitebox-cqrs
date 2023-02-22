@@ -22,7 +22,9 @@ public class AccountAggregate {
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountAggregate.class);
 
     public static class InsufficientFundsException extends Exception {
-        // TODO: Constructor with details
+        public InsufficientFundsException(String accountNumber, long amount) {
+            super("Cannot debit account " + accountNumber + " with " + amount);
+        }
     }
 
     @AggregateIdentifier
@@ -75,7 +77,7 @@ public class AccountAggregate {
     @CommandHandler
     public void handle(final DebitAccountCommand command) throws InsufficientFundsException {
         if (this.balance - command.debitValue() < -this.overdraftLimit) {
-            throw new InsufficientFundsException();
+            throw new InsufficientFundsException(command.accountNumber(), command.debitValue());
         }
         AggregateLifecycle.apply(
                 new AccountDebitedEvent(

@@ -10,10 +10,11 @@
 
 # Implementation improvements
 
-- [ ] TODOs
+- [x] TODOs
 - [ ] Proper money format (`BigDecimal` instead of `long`)
 
 # Project setup improvements
 - [x] Version management in gradle build files
 - [x] Expose non-standard ports configuration in test setup in Gradle and Spring configs to prevent conflicts with standard local setup
 - [ ] Create fast test configuration to run only unit tests without docker-compose, Axon server and Spring context
+- [ ] Github actions build (too much?)
