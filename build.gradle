@@ -1,22 +1,8 @@
-apply plugin: "groovy"
-
 version = "0.0.1"
 description = "Recruitment task for Whitebox"
 
-sourceCompatibility = 1.17
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation platform("org.spockframework:spock-bom:2.3-groovy-4.0")
-    testImplementation "org.spockframework:spock-core"
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
+subprojects {
+    apply plugin: 'java'
+    apply plugin: "groovy"
+    sourceCompatibility = 1.17
 }

@@ -1,0 +1,26 @@
+plugins {
+    id 'org.springframework.boot' version '3.0.2'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":banking-domain")
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.axonframework:axon-spring-boot-starter:4.7.1'
+
+    testImplementation platform("org.spockframework:spock-bom:2.3-groovy-4.0")
+    testImplementation "org.spockframework:spock-core"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
